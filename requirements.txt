@@ -1,0 +1,7 @@
+# 另需自行安装 FFmpeg / ffprobe（加入 PATH）和 Node.js 22+
+openai-whisper
+numpy
+jieba
+fonttools
+pillow
+opencv-python

@@ -1,0 +1,21 @@
+# 依赖与构建
+node_modules/
+**/bundle/
+__pycache__/
+*.pyc
+
+# 自动下载的大字体（见 assets/fonts/README.md）
+assets/fonts/IBMPlexSansSC-*.otf
+assets/fonts/NotoSerifSC-*.ttf
+
+# 动效工程里每条视频生成的素材
+motion-template/public/rough.mp4
+motion-template/public/fonts/*
+motion-template/public/sfx/*
+motion-template/public/clips/*
+!motion-template/public/**/.gitkeep
+
+# 视频与中间文件
+*.mp4
+*.mov
+*.wav
