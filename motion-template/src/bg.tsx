@@ -6,7 +6,7 @@ import { C, H, W } from "./engine/theme";
 import { SERIF } from "./engine/fonts";
 import { CHAPTERS, chapterAt } from "./kit";
 
-export const WHIPS = [62.95, 87.45];
+export const WHIPS = [11.3, 87.2];
 const p3io = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
 const PAN = 140; // 每次甩镜背景横移的像素
 export const bgPan = (t: number) => WHIPS.reduce((s, w) => s + p3io(clamp(invLerp(w, w + 0.55, t))) * PAN, 0);
@@ -84,9 +84,9 @@ export const Backdrop: React.FC<{ t: number }> = ({ t }) => {
 
 /* ---------------- 底部舞台：章节进度条 + 透视地面网格 + 超大章节号（铺满字幕下方的区域） ---------------- */
 const RAIL: [string, string, number, number, string][] = [
-  ["01", "他手里的价", 30.42, 62.95, C.orange],
-  ["02", "他走了之后", 62.95, 87.45, C.green],
-  ["03", "你心里的价", 87.45, 113.6, C.red],
+  ["01", "物业收费", 34.42, 55.6, C.orange],
+  ["02", "人工湖", 55.6, 67.7, C.green],
+  ["03", "2 号楼", 67.7, 96.3, C.red],
 ];
 export const BottomStage: React.FC<{ t: number }> = ({ t }) => {
   const HZ = 1415; // 地平线（字幕带下面）
@@ -103,7 +103,7 @@ export const BottomStage: React.FC<{ t: number }> = ({ t }) => {
   const [, a, b] = CHAPTERS[ch];
   const wIn = E.outExpo(clamp(invLerp(a + 0.2, a + 1.2, t)));
   const wOut = E.inCubic(clamp(invLerp(b - 0.4, b, t)));
-  const railOn = E.outCubic(clamp(invLerp(30.6, 31.3, t))) * (1 - E.inCubic(clamp(invLerp(113.3, 113.65, t))));
+  const railOn = E.outCubic(clamp(invLerp(35.95, 36.65, t)));
   return (
     <>
       <svg width={W} height={H} style={{ position: "absolute", left: 0, top: 0 }}>
@@ -170,8 +170,8 @@ export const BottomStage: React.FC<{ t: number }> = ({ t }) => {
               }}
             >
               <div style={{ position: "absolute", left: 0, bottom: 0, height: 5, width: `${(done ? 1 : act ? k : 0) * 100}%`, background: c, opacity: done ? 0.4 : 1 }} />
-              <span style={{ fontFamily: '"Inter Tight", sans-serif', fontWeight: 700, fontSize: 28, color: act || done ? c : "rgba(24,61,51,0.35)" }}>{n}</span>
-              <span style={{ fontFamily: '"Noto Sans SC", sans-serif', fontSize: 28, color: act ? C.text : done ? C.sub : "rgba(24,61,51,0.4)", whiteSpace: "nowrap" }}>{name}</span>
+              <span style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 34, color: act || done ? c : "rgba(24,61,51,0.35)" }}>{n}</span>
+              <span style={{ fontFamily: SERIF, fontSize: 34, color: act ? C.text : done ? C.sub : "rgba(24,61,51,0.4)", whiteSpace: "nowrap" }}>{name}</span>
               {done && <span style={{ marginLeft: "auto", color: c, fontSize: 22 }}>✓</span>}
             </div>
           );

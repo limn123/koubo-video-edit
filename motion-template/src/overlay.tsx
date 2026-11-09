@@ -3,7 +3,7 @@ import React from "react";
 import { AbsoluteFill } from "remotion";
 import { E, clamp } from "./engine/ease";
 import { C, W } from "./engine/theme";
-import { NUM, SANS } from "./engine/fonts";
+import { SANS } from "./engine/fonts";
 import { io } from "./kit";
 
 /* ---------------- 评论区箭头：从标题下方的标签右端出发，沿右边缘（脸的右侧外面）弯下去指向评论按钮 ---------------- */
@@ -27,49 +27,43 @@ const Arrow: React.FC<{ t: number; at: number; out: number; d: string; tip: [num
     </svg>
   );
 };
-export const CommentArrow: React.FC<{ t: number }> = ({ t }) => (
-  <Arrow t={t} at={160.95} out={163.7} d="M835 458 C 970 458, 1024 530, 1020 700 L 1012 1020" tip={[1012, 1030]} />
-);
+export const CommentArrow: React.FC<{ t: number }> = ({ t }) => (t < 0 ? <Arrow t={t} at={0} out={0} d="" tip={[0, 0]} /> : null);
 
 /* ---------------- 底部压暗：只在 B-roll 段（米白底上平台作者名/文案是白字）；人物全屏时不压暗 ---------------- */
 export const BottomShade: React.FC<{ pip: number }> = ({ pip }) => (
   <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(16,40,33,0) 0px, rgba(16,40,33,0) 1480px, rgba(16,40,33,0.22) 1680px, rgba(16,40,33,0.5) 1920px)", opacity: pip }} />
 );
 
-/* ---------------- 结尾评论框示范：标题“打在评论区”下面一条评论输入框，随口播逐项打出示例（标“示例”），
-   位置在头顶上方（y 410–506），不压脸；箭头从框右端出发指向评论按钮 ---------------- */
-const ITEMS: [string, number][] = [
-  ["A小区", 158.3],
-  ["两室", 158.8],
-  ["挂 55 万", 159.4],
-  ["买家出 48 万", 160.45],
-];
-export const CommentBox: React.FC<{ t: number }> = ({ t }) => {
-  if (t < 157.95 || t > 162.0) return null;
-  const k = E.outCubic(clamp((t - 158.0) / 0.4));
-  const o = E.inCubic(clamp((t - 161.6) / 0.32));
-  const caret = Math.floor(t * 3) % 2 === 0;
+/* ---------------- 人工湖实景标注（全屏段，人物不在画面里，镜头在拍湖）：
+   59.0s 湖面出现时“人工湖”标签带箭头落下，63.5s 说“清理干净”时圈住水面左边漂着的落叶，标“落叶要清理” ---------------- */
+export const LakeMark: React.FC<{ t: number }> = ({ t }) => {
+  if (t < 58.9 || t > 65.8) return null;
+  const { p, o } = io(t, 59.0, 65.3, 0.5, 0.35);
+  const a = Math.min(1, p * 3) * (1 - E.inCubic(o));
+  const k = E.outBack(p, 1.6);
+  const bob = Math.sin((t - 59) * 4) * 8;
+  const circ = E.outCubic(clamp((t - 63.55) / 0.55));
+  const co = E.inCubic(clamp((t - 65.1) / 0.35));
   return (
-    <div style={{ position: "absolute", left: 60, top: 410, width: 760, height: 96, opacity: k * (1 - o), transform: `translateY(${(1 - k) * 30 - 50 * o}px)` }}>
-      <div style={{ position: "absolute", inset: 0, background: "#FFFFFF", borderRadius: 48, boxShadow: "0 6px 0 rgba(205,191,168,0.95), 0 16px 30px rgba(40,30,15,0.28)", display: "flex", alignItems: "center", padding: "0 26px", gap: 14 }}>
-        <svg width={40} height={40} viewBox="0 0 48 48" style={{ flexShrink: 0 }}>
-          <path d="M6 10 H42 V32 H22 L13 40 V32 H6 Z" fill="none" stroke={C.orange} strokeWidth={4} strokeLinejoin="round" />
+    <>
+      <div style={{ position: "absolute", left: 300, top: 880 + bob, opacity: a, transform: `scale(${k})`, transformOrigin: "50% 100%" }}>
+        <div style={{ fontFamily: SANS, fontSize: 64, color: "#fff", background: C.red, borderRadius: 999, padding: "6px 30px 10px", boxShadow: "0 6px 0 rgba(0,0,0,0.18), 0 14px 26px rgba(40,20,10,0.35)", whiteSpace: "nowrap" }}>人工湖</div>
+        <svg width={80} height={110} style={{ position: "absolute", left: 90, top: 100, overflow: "visible" }}>
+          <path d="M30 0 V80 M8 58 L30 84 L52 58" fill="none" stroke="#fff" strokeWidth={14} strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M30 0 V80 M8 58 L30 84 L52 58" fill="none" stroke={C.red} strokeWidth={8} strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-        <div style={{ display: "flex", alignItems: "center", fontFamily: SANS, fontWeight: 600, fontSize: 30, color: C.text, whiteSpace: "nowrap", flexShrink: 0 }}>
-          {ITEMS.map(([txt, at], i) => {
-            const n = Math.floor(clamp((t - at) / 0.32) * txt.length + (t >= at ? 1 : 0));
-            if (t < at) return null;
-            return (
-              <span key={txt}>
-                {i > 0 && <span style={{ color: C.muted, margin: "0 8px" }}>·</span>}
-                <span style={{ color: i >= 2 ? C.red : C.text, fontFamily: i >= 2 ? `${NUM}, ${SANS}` : SANS }}>{txt.slice(0, Math.min(txt.length, n))}</span>
-              </span>
-            );
-          })}
-          <span style={{ width: 3, height: 38, background: C.orange, marginLeft: 4, opacity: caret ? 1 : 0 }} />
-        </div>
-        <div style={{ marginLeft: "auto", flexShrink: 0, whiteSpace: "nowrap", fontFamily: SANS, fontWeight: 600, fontSize: 22, color: C.muted, border: `2px solid ${C.muted}`, borderRadius: 8, padding: "0 8px 2px" }}>示例</div>
       </div>
-    </div>
+      {circ > 0 && (
+        <svg width={W} height={1920} style={{ position: "absolute", left: 0, top: 0, opacity: 1 - co, overflow: "visible" }}>
+          <ellipse cx={330} cy={1290} rx={290} ry={105} fill="none" stroke="#fff" strokeWidth={14} pathLength={1} strokeDasharray={`${circ} 1`} transform="rotate(-4 330 1290)" opacity={0.85} />
+          <ellipse cx={330} cy={1290} rx={290} ry={105} fill="none" stroke={C.orange} strokeWidth={8} pathLength={1} strokeDasharray={`${circ} 1`} transform="rotate(-4 330 1290)" />
+        </svg>
+      )}
+      {circ > 0 && (
+        <div style={{ position: "absolute", left: 80, top: 1112, opacity: 1 - co, transform: `scale(${E.outBack(clamp((t - 63.9) / 0.35), 1.8)})`, transformOrigin: "0 100%" }}>
+          <div style={{ fontFamily: SANS, fontSize: 44, color: "#fff", background: C.orange, borderRadius: 999, padding: "4px 26px 8px", boxShadow: "0 6px 0 rgba(0,0,0,0.16), 0 12px 22px rgba(40,20,10,0.35)", whiteSpace: "nowrap" }}>落叶要清理</div>
+        </div>
+      )}
+    </>
   );
 };

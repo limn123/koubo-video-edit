@@ -7,7 +7,7 @@ import { E, clamp, invLerp, lerp } from "./engine/ease";
 import { C, W } from "./engine/theme";
 import { SANS, SERIF } from "./engine/fonts";
 import { fullDY } from "./project";
-import { heartBeat } from "./hook";
+
 
 export type FullTitleSpec = {
   at: number;
@@ -126,7 +126,7 @@ export const FullTitle: React.FC<{ t: number; s: FullTitleSpec }> = ({ t, s }) =
         <Strip key={i} t={t} at={lineAt(i)} text={l} hl={hls.find((h) => l.includes(h))} size={size} color={color} tilt={i % 2 === 0 ? -1.2 : 0.8} />
       ))}
       {s.chips && (
-        <div style={{ display: "flex", gap: 14, marginTop: 10 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 14, marginTop: 10 }}>
           {s.chips.map(([c, col], i) => {
             const a0 = s.chipTimes?.[i] ?? (s.chipsAt ?? s.at + 0.5) + i * 0.14;
             const k = E.outBack(clamp(invLerp(a0, a0 + 0.38, t)), 1.8);
@@ -136,7 +136,7 @@ export const FullTitle: React.FC<{ t: number; s: FullTitleSpec }> = ({ t, s }) =
                 style={{
                   fontFamily: SANS,
                   fontWeight: 600,
-                  fontSize: 36,
+                  fontSize: 44,
                   color: "#fff",
                   background: col,
                   padding: "8px 24px 10px",
@@ -176,24 +176,20 @@ export const FullFrame: React.FC<{ t: number; full: number }> = ({ t, full }) =>
   );
 };
 
-/** 首帧封面：第 0 帧即完整显示（可直接当封面）；说到“这一刀”时一道刀光斜劈过纸条，6.3s 向上收走，人物缩进圆环 */
+
+/** 首帧封面：第 0 帧即完整显示（可直接当封面）；说到“优点”第一行弹一下，说到“缺点”第二行红块擦满并震一下，7.2s 向上收走，人物缩进圆环 */
 export const Cover: React.FC<{ t: number }> = ({ t }) => {
-  if (t > 6.8) return null;
-  const o = E.inCubic(clamp(invLerp(6.25, 6.6, t)));
-  const hl = E.outExpo(clamp(invLerp(-0.2, 0.45, t)));
-  // 说到“买家把价砍到你心慌”“这一刀该不该接”时两行各弹一下
+  if (t < 0 || t > 7.75) return null;
+  const o = E.inCubic(clamp(invLerp(7.25, 7.6, t)));
   const bump = (a: number) => {
     const d = t - a;
     return d > 0 && d < 0.5 ? 1 + Math.sin(d * 14) * 0.06 * Math.exp(-d * 6) : 1;
   };
-  // 菜刀落下时纸条跟着震一下
+  // 7.0s 说“缺点”时纸条跟着红叉震一下
   const shk = (a: number, ph: number) => {
     const d = t - a;
     return d > 0 && d < 0.35 ? Math.sin(d * 70 + ph) * 9 * Math.exp(-d * 10) : 0;
   };
-  // 刀光：5.45s 从右上斜劈到左下，留下一道细红口子
-  const cut = clamp((t - 5.45) / 0.22);
-  const glow = cut > 0 ? Math.exp(-(t - 5.67) * 5) : 0;
   const strip = (children: React.ReactNode, tilt: number, s = 1) => (
     <div style={{ display: "flex", marginBottom: 12 }}>
       <div
@@ -205,7 +201,7 @@ export const Cover: React.FC<{ t: number }> = ({ t }) => {
           padding: "6px 22px 10px",
           boxShadow: "0 6px 0 rgba(205,191,168,0.95), 0 16px 30px rgba(40,30,15,0.28)",
           fontFamily: SERIF,
-          fontSize: 84,
+          fontSize: 86,
           lineHeight: 1.12,
           color: C.text,
           whiteSpace: "nowrap",
@@ -216,38 +212,24 @@ export const Cover: React.FC<{ t: number }> = ({ t }) => {
       </div>
     </div>
   );
+  const hlSpan = (txt: string, col: string, k: number) => (
+    <span style={{ position: "relative", display: "inline-block", padding: "0 0.08em", marginRight: 8 }}>
+      <span style={{ position: "absolute", left: 0, top: "10%", bottom: "4%", width: `${k * 100}%`, background: col, transform: "skewX(-10deg)", borderRadius: 6 }} />
+      <span style={{ position: "relative", color: k > 0.45 ? "#fff" : C.text }}>{txt}</span>
+    </span>
+  );
+  // 钩子闪白之后两块色块就铺满；说到“缺点”时红块原地放大闪一下（不再重擦，免得中间空一下）
+  const re = 1;
+  const flashHl = t > 6.95 && t < 7.4 ? 0.5 + 0.5 * Math.cos((t - 6.95) * 28) : 1;
   return (
-    <div style={{ position: "absolute", left: X, top: Y, width: W - X * 2, opacity: 1 - o, transform: `translateY(${-60 * o}px) translate(${shk(4.12, 1)}px, ${shk(4.12, 2)}px)` }}>
+    <div style={{ position: "absolute", left: X, top: Y, width: W - X * 2, opacity: 1 - o, transform: `translateY(${-60 * o}px) translate(${shk(7.0, 1)}px, ${shk(7.0, 2)}px)` }}>
       <div style={{ display: "flex", marginBottom: 14 }}>
-        <div style={{ fontFamily: SANS, fontWeight: 600, fontSize: 34, color: "#fff", background: C.deep, padding: "6px 20px 8px", borderRadius: 8, letterSpacing: 2, transform: "rotate(-1.5deg)", boxShadow: "0 6px 16px rgba(40,30,15,0.25)" }}>
-          想卖房的房东看过来
+        <div style={{ fontFamily: SANS, fontWeight: 600, fontSize: 36, color: "#fff", background: C.deep, padding: "6px 20px 8px", borderRadius: 8, letterSpacing: 2, transform: "rotate(-1.5deg)", boxShadow: "0 6px 16px rgba(40,30,15,0.25)" }}>
+          本地 · 示例花园
         </div>
       </div>
-      {strip(
-        <>
-          买家把价砍到你
-          <span style={{ display: "inline-block", color: t > 4.58 ? C.red : C.text, transform: `scale(${1 + heartBeat(t)})` }}>心慌</span>
-        </>,
-        -1.2,
-        bump(3.2),
-      )}
-      {strip(
-        <>
-          这一刀
-          <span style={{ position: "relative", display: "inline-block", padding: "0 0.08em", marginLeft: 10 }}>
-            <span style={{ position: "absolute", left: 0, top: "10%", bottom: "4%", width: `${hl * 100}%`, background: C.red, transform: "skewX(-10deg)", borderRadius: 6 }} />
-            <span style={{ position: "relative", color: "#fff" }}>该不该接？</span>
-          </span>
-        </>,
-        0.8,
-        bump(5.42),
-      )}
-      {cut > 0 && (
-        <svg width={W} height={420} style={{ position: "absolute", left: -X, top: 0, overflow: "visible", pointerEvents: "none" }}>
-          <path d="M1000 40 L80 400" stroke="#fff" strokeWidth={14 * glow + 2} strokeLinecap="round" pathLength={1} strokeDasharray={`${cut} 1`} opacity={0.9 * glow + 0.1 * (1 - glow)} />
-          <path d="M1000 40 L80 400" stroke={C.red} strokeWidth={3} strokeLinecap="round" pathLength={1} strokeDasharray={`${cut} 1`} opacity={0.85} />
-        </svg>
-      )}
+      {strip(<>{hlSpan("优点", C.green, 1)}简单讲</>, -1.2, bump(2.3) * bump(4.76))}
+      {strip(<><span style={{ display: "inline-block", transform: `scale(${1 + 0.12 * Math.max(0, Math.sin(Math.min(1, Math.max(0, (t - 6.95) / 0.45)) * Math.PI))})`, opacity: flashHl > 0.3 ? 1 : 0.85 }}>{hlSpan("缺点", C.red, re)}</span>着重讲！</>, 0.8, bump(7.0))}
     </div>
   );
 };

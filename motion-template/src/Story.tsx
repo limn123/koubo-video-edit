@@ -3,32 +3,27 @@ import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { ensureFonts } from "./engine/fonts";
 import { Presenter, pipProgress } from "./engine/Presenter";
 import { C } from "./engine/theme";
+import { E, clamp } from "./engine/ease";
 import { Backdrop, BottomStage, WHIPS } from "./bg";
-import { BottomShade, CommentArrow, CommentBox } from "./overlay";
+import { BottomShade, LakeMark } from "./overlay";
 import { Cover, FullFrame, FullTitle } from "./fulltitle";
 import { OpenHook } from "./hook";
+import { EndCard, Teaser } from "./teaser";
 import { FilmGrain, WhipSeam, shake } from "./fx";
-import { S1_Hook } from "./scenes/S1_Hook";
-import { S2_Hand } from "./scenes/S2_Hand";
-import { S3_Next } from "./scenes/S3_Next";
-import { S4_Anchor } from "./scenes/S4_Anchor";
-import { S5_Cost } from "./scenes/S5_Cost";
-import { S6_Ask } from "./scenes/S6_Ask";
-import { S7_Neutral } from "./scenes/S7_Neutral";
-import { FULL_TITLES, MODES, VIDEO, faceAt } from "./project";
+import { S1_Good } from "./scenes/S1_Good";
+import { S2_Fee } from "./scenes/S2_Fee";
+import { S3_Cold } from "./scenes/S3_Cold";
+import { FULL_TITLES, MODES, VIDEO, faceAt, toOld } from "./project";
 
 ensureFonts();
 
 // 冲击抖动（只作用于 B-roll 舞台，人物不抖）：结论落点
 export const HITS: [number, number][] = [
-  [41.62, 0.5],
-  [53.78, 0.5],
-  [62.42, 0.4],
-  [80.52, 0.6],
-  [95.45, 0.5],
-  [100.95, 0.9],
-  [106.72, 0.9],
-  [123.18, 0.4],
+  [26.62, 0.5],
+  [48.1, 0.5],
+  [86.94, 0.9],
+  [90.5, 0.4],
+  [95.2, 0.5],
 ];
 
 // 画面合成；音频不在这里（渲染加 --muted，用 mix_audio.py 混人声+音效，final_compose 合成）
@@ -36,7 +31,9 @@ export const HITS: [number, number][] = [
 export const Story: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const t = frame / fps;
+  // tn = 新粗剪时间（视频、人脸跟踪用）；t = 旧时间（所有动画都按它写，见 project.ts 的 toOld）
+  const tn = frame / fps;
+  const t = toOld(tn);
   const pip = pipProgress(t, MODES);
   return (
     <AbsoluteFill style={{ background: C.bg }}>
@@ -45,13 +42,9 @@ export const Story: React.FC = () => {
           <Backdrop t={t} />
           <BottomStage t={t} />
           <AbsoluteFill style={{ transform: shake(t, HITS, 0.8) }}>
-            <S1_Hook t={t} />
-            <S2_Hand t={t} />
-            <S3_Next t={t} />
-            <S4_Anchor t={t} />
-            <S5_Cost t={t} />
-            <S6_Ask t={t} />
-            <S7_Neutral t={t} />
+            <S1_Good t={t} />
+            <S2_Fee t={t} />
+            <S3_Cold t={t} />
           </AbsoluteFill>
           {WHIPS.map((w) => (
             <WhipSeam key={w} t={t} at={w} />
@@ -61,15 +54,19 @@ export const Story: React.FC = () => {
           <BottomShade pip={pip} />
         </AbsoluteFill>
       )}
-      <Presenter t={t} modes={MODES} src={VIDEO} face={faceAt(t)} />
+      {/* 94.3s 起她转身背对镜头，圆环缩小收走（结尾卡片 95.85s 从同一位置展开） */}
+      <AbsoluteFill style={{ transformOrigin: "880px 360px", transform: `scale(${1 - E.inCubic(clamp((t - 94.3) / 0.35))})` }}>
+        <Presenter t={t} modes={MODES} src={VIDEO} face={faceAt(tn)} />
+      </AbsoluteFill>
       <FullFrame t={t} full={1 - pip} />
+      <LakeMark t={t} />
       {FULL_TITLES.map((s, i) => (
         <FullTitle key={i} t={t} s={s} />
       ))}
       <Cover t={t} />
       <OpenHook t={t} />
-      <CommentBox t={t} />
-      <CommentArrow t={t} />
+      <Teaser tn={tn} />
+      <EndCard t={t} />
     </AbsoluteFill>
   );
 };

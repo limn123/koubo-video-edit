@@ -26,7 +26,7 @@ def manifest():
 
 
 def locate(name):
-    for d in [os.environ.get("LEAD_FONT_DIR"), FONT_DIR]:
+    for d in [os.environ.get("LEAD_FONT_DIR"), FONT_DIR, os.path.join(FONT_DIR, "fun")]:  # fun/：按风格选用的标题/字幕字体
         if d:
             p = os.path.join(d, name)
             if os.path.isfile(p) and os.path.getsize(p) > 0:

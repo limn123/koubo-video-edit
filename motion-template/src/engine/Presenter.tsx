@@ -36,7 +36,7 @@ export const Presenter: React.FC<{
   t: number;
   modes: Mode[];
   src: string;
-  face: { x: number; y: number; r: number };
+  face: { x: number; y: number; r: number; g?: number };
 }> = ({ t, modes, src, face }) => {
   const e = pipProgress(t, modes);
   const sFull = fullPush(t, modes) * punch(t);
@@ -50,6 +50,9 @@ export const Presenter: React.FC<{
   const r = Math.exp(lerp(Math.log(1400), Math.log(PIP.r), e));
   const ringA = clamp((e - 0.55) / 0.45);
   const spin = t * 22;
+  // 圆环补光：逆光拍的脸偏暗，缩进圆环后按脸的亮度做伽马提暗部（高光基本不动）；e=0（全屏）时完全不加，保持原片色彩
+  const gam = lerp(1, face.g ?? 1, e);
+  const lift = gam < 0.995;
 
   return (
     <AbsoluteFill>
@@ -65,7 +68,18 @@ export const Presenter: React.FC<{
           boxShadow: `0 ${26 * ringA}px ${70 * ringA}px rgba(90,64,30,${0.32 * ringA}), 0 ${6 * ringA}px ${16 * ringA}px rgba(90,64,30,${0.2 * ringA})`,
         }}
       />
-      <AbsoluteFill style={{ clipPath: `circle(${r}px at ${ax}px ${ay}px)` }}>
+      {lift && (
+        <svg width={0} height={0} style={{ position: "absolute" }}>
+          <filter id="ringLift" colorInterpolationFilters="sRGB">
+            <feComponentTransfer>
+              <feFuncR type="gamma" amplitude={1} exponent={gam} offset={0} />
+              <feFuncG type="gamma" amplitude={1} exponent={gam} offset={0} />
+              <feFuncB type="gamma" amplitude={1} exponent={gam} offset={0} />
+            </feComponentTransfer>
+          </filter>
+        </svg>
+      )}
+      <AbsoluteFill style={{ clipPath: `circle(${r}px at ${ax}px ${ay}px)`, filter: lift ? `url(#ringLift) saturate(${lerp(1, 1.08, e)})` : undefined }}>
         <OffthreadVideo
           src={staticFile(src)}
           muted
