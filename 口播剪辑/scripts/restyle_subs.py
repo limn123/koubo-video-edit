@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """按画面切换字幕样式（不改时间轴）：
 - 全片统一墨绿字 + 白描边 + 暖色柔和投影（B-roll 是米白纸面，白字会发虚）；
-- 圆环段（B-roll）：字幕底边下移到 y=2780（设计坐标 1390，原 2560 太靠上；底部安全区按宽松版放到 1600）；
+- 圆环段（B-roll）：字幕底边下移到 y=3040（设计坐标 1520；用户 11.10“还可以下去一点”“稍微盖一点没关系”，原 2780；下面是 1540–1600 的进度条）；
 - 人物全屏段：字幕下移到锁骨位置（ASS 画布底边 y=2940，抖音安全区下沿 y=2960 以内）。
   全屏有推近（PUNCH），下巴会往下走到设计坐标 y≈1300，2830 会贴着下巴，所以默认 2940；改完用 fullscreen_sub_check.py 抽查。
 人物圆环/全屏的时间段直接从 motion/src/project.ts 的 MODES 读取，不用手抄。
 
-python restyle_subs.py 字幕.ass 字幕.ass --project <motion>/src/project.ts [--broll-y 2780] [--full-y 2940]
+python restyle_subs.py 字幕.ass 字幕.ass --project <motion>/src/project.ts [--broll-y 3040] [--full-y 3170]
 """
 import argparse
 import re
@@ -39,8 +39,8 @@ def main():
     ap.add_argument("src")
     ap.add_argument("dst")
     ap.add_argument("--project", required=True)
-    ap.add_argument("--full-y", type=int, default=2940)
-    ap.add_argument("--broll-y", type=int, default=2780)
+    ap.add_argument("--full-y", type=int, default=3170)
+    ap.add_argument("--broll-y", type=int, default=3040)
     a = ap.parse_args()
     PIP = pip_intervals(a.project)
     on_broll = lambda s, e: any(x + 0.3 <= (s + e) / 2 <= y + 0.3 for x, y in PIP)

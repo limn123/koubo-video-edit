@@ -46,7 +46,7 @@ def main():
                    {round(max(s, e - 0.4), 2) for s, e in segs})
     tmp = tempfile.mkdtemp()
     tiles = []
-    font = ImageFont.truetype(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets", "fonts", "NotoSansSC-Medium.otf"), 22)
+    font = ImageFont.truetype("C:/Windows/Fonts/msyh.ttc", 22)
     for i, t in enumerate(times):
         p = os.path.join(tmp, f"{i}.png")
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(t), "-i", a.video, "-frames:v", "1",

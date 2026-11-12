@@ -25,7 +25,7 @@ def main():
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(a.start), "-to", str(a.end), "-i", a.video,
                     "-vf", f"fps=1/{a.step},scale=240:-1", os.path.join(tmp, "f_%05d.jpg")], check=True)
     fs = sorted(os.listdir(tmp))
-    font = ImageFont.truetype(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets", "fonts", "NotoSansSC-Medium.otf"), 18)
+    font = ImageFont.truetype("C:/Windows/Fonts/msyh.ttc", 18)
     per = a.cols * a.rows
     for k in range(0, len(fs), per):
         chunk = fs[k:k + per]

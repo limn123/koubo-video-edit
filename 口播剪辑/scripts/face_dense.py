@@ -2,7 +2,7 @@
 正脸 alt2 + 侧脸（左右各一）三个检测器合在一起，取离上一个点最近的候选（跳太远的丢掉）；
 没检出的点线性插值，再按中值（去跳点）+ 高斯（σ=0.3s，零延迟）平滑位置，人脸宽度用 σ=0.6s 平滑。
 输出 [[t, x, y, w], ...]，并打印命中率。
-python face_dense.py rough.mp4 face.json [--step 0.1] [--until 秒]
+python face_dense.py rough.mp4 face.json [--step 0.1] [--until 秒] [--max-face 700 --ymin 300]
 """
 import argparse, json
 import cv2
@@ -11,6 +11,8 @@ import numpy as np
 ap = argparse.ArgumentParser()
 ap.add_argument("src"); ap.add_argument("out")
 ap.add_argument("--step", type=float, default=0.1); ap.add_argument("--until", type=float, default=1e9)
+# 室内近景（脸宽 400+）用 --max-face 700 --ymin 300
+ap.add_argument("--max-face", type=int, default=260); ap.add_argument("--ymin", type=float, default=500); ap.add_argument("--ymax", type=float, default=1450)
 a = ap.parse_args()
 cap = cv2.VideoCapture(a.src)
 fps = cap.get(cv2.CAP_PROP_FPS); n = int(cap.get(cv2.CAP_PROP_FRAME_COUNT)); dur = min(n / fps, a.until)
@@ -36,19 +38,19 @@ while True:
     fr = cv2.resize(fr, (1080, 1920))
     g = cv2.equalizeHist(cv2.cvtColor(fr, cv2.COLOR_BGR2GRAY))
     c = []
-    for (x, y, w, h) in F.detectMultiScale(g, 1.07, 4, minSize=(36, 36), maxSize=(260, 260)):
+    for (x, y, w, h) in F.detectMultiScale(g, 1.07, 4, minSize=(36, 36), maxSize=(a.max_face, a.max_face)):
         c.append((x + w / 2, y + h / 2, w, 1.0))
-    for (x, y, w, h) in P.detectMultiScale(g, 1.07, 4, minSize=(40, 40), maxSize=(260, 260)):
+    for (x, y, w, h) in P.detectMultiScale(g, 1.07, 4, minSize=(40, 40), maxSize=(a.max_face, a.max_face)):
         c.append((x + w / 2, y + h / 2, w, 0.8))
-    for (x, y, w, h) in P.detectMultiScale(cv2.flip(g, 1), 1.07, 4, minSize=(40, 40), maxSize=(260, 260)):
+    for (x, y, w, h) in P.detectMultiScale(cv2.flip(g, 1), 1.07, 4, minSize=(40, 40), maxSize=(a.max_face, a.max_face)):
         c.append((1080 - x - w / 2, y + h / 2, w, 0.8))
-    c = [k for k in c if 500 < k[1] < 1450]
+    c = [k for k in c if a.ymin < k[1] < a.ymax]
     hit = None
     if c:
         if prev is None:
             hit = max(c, key=lambda k: k[2] * k[3])
         else:
-            lim = 160 + 120 * min(miss, 5)  # 丢得越久允许跳得越远
+            lim = max(160, a.max_face * 0.6) + 120 * min(miss, 5)  # 丢得越久允许跳得越远
             best = min(c, key=lambda k: np.hypot(k[0] - prev[0], k[1] - prev[1]))
             if np.hypot(best[0] - prev[0], best[1] - prev[1]) < lim:
                 hit = best

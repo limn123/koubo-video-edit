@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """字体样张：把这条视频自己的封面标题 + 一句字幕，用几套候选字体组合直接叠在原片画面上，拼成一张对比图，给用户挑。
 
-python font_samples.py --video 原片或粗剪.mp4 --t 3.0 --title "楼王 2 号楼|屋里冷两度！" --kicker "本地 · 示例花园" \
+python font_samples.py --video 原片或粗剪.mp4 --t 3.0 --title "楼王 2 号楼|屋里冷两度！" --kicker "浏河 · 恒大江沁苑" \
     --sub "整个屋子的温度会比其他的少个两度" --out 字体样张.jpg [--sets A,B,C,D,E,F]
 
 每套 = 标题字体 + 字幕字体（手写/毛笔类只用在标题，字幕一律用好读的字体）。字体都是 OFL/开源可商用。
-字体目录：skill 的 assets/fonts/ 和 assets/fonts/fun/。
+字体目录：先找 skill 的 assets/fonts/ 和 assets/fonts/fun/，再找 D:/Claude剪视频/fonts/ 和 fonts/fun/。
 """
 import argparse
 import os
@@ -15,11 +15,12 @@ import sys
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DIRS = [os.path.join(HERE, "..", "assets", "fonts", "fun"), os.path.join(HERE, "..", "assets", "fonts")]
+DIRS = [os.path.join(HERE, "..", "assets", "fonts", "fun"), os.path.join(HERE, "..", "assets", "fonts"),
+        "D:/Claude剪视频/fonts/fun", "D:/Claude剪视频/fonts"]
 
 # 代号: (名称与适用风格, 标题字体文件, 字幕字体文件)
 SETS = {
-    "A": ("站酷快乐体 · 活泼卡通（生活/吐槽/探盘；拿不准时的默认）", "ZCOOLKuaiLe-Regular.ttf", "ZCOOLKuaiLe-Regular.ttf"),
+    "A": ("站酷快乐体 · 活泼卡通（生活/吐槽/探盘，用户 11.8 起常用）", "ZCOOLKuaiLe-Regular.ttf", "ZCOOLKuaiLe-Regular.ttf"),
     "B": ("得意黑 · 利落斜体（干货/数据/行情）", "SmileySans-Oblique.ttf", "NotoSansSC-Medium.otf"),
     "C": ("马善政毛笔 + 思源黑（温情/养老/老小区故事）", "MaShanZheng-Regular.ttf", "NotoSansSC-Medium.otf"),
     "D": ("志莽行书 + 快乐体（个人感悟/经历）", "ZhiMangXing-Regular.ttf", "ZCOOLKuaiLe-Regular.ttf"),

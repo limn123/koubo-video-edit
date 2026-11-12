@@ -5,17 +5,23 @@ __pycache__/
 *.pyc
 
 # 自动下载的大字体（见 assets/fonts/README.md）
-assets/fonts/IBMPlexSansSC-*.otf
-assets/fonts/NotoSerifSC-*.ttf
+口播剪辑/assets/fonts/IBMPlexSansSC-*.otf
+口播剪辑/assets/fonts/NotoSerifSC-*.ttf
 
 # 动效工程里每条视频生成的素材
-motion-template/public/rough.mp4
-motion-template/public/fonts/*
-motion-template/public/sfx/*
-motion-template/public/clips/*
-!motion-template/public/**/.gitkeep
+**/motion-template/public/rough.mp4
+**/motion-template/public/fonts/*
+**/motion-template/public/sfx/*
+**/motion-template/public/music/*
+**/motion-template/public/clips/*
+!**/motion-template/public/**/.gitkeep
 
 # 视频与中间文件
 *.mp4
 *.mov
+*.wav
+
+# 真实音效按许可不能再分发，只带清单（fetch_sfx.py 下载）
+**/sfx_real/*.mp3
+!**/sfx_real/sfx_map.json
 *.wav

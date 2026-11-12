@@ -1,91 +1,130 @@
-# koubo-video-edit · 竖版口播剪辑 Skill
+# 短视频剪辑两件套：口播剪辑 + 探盘剪辑
 
-把一段自己录的**竖版口播视频**，交给 AI 编程助手（Claude Code / Codex）一条龙剪成**可以直接发抖音、视频号、小红书的成片**。
+两个给 AI 编程助手（Claude Code / Codex）用的剪辑 Skill。把素材放进一个文件夹，跟助手说一句"剪口播"或"剪探盘"，它就按这里写好的流程和规矩，把片子从头剪到能直接发抖音、视频号、小红书的竖版成片。
 
-- **先定风格**：开工前看片判断场景、光线和话题调性，写一张风格卡；用这条视频自己的画面出字体样张，按风格挑字体（活泼卡通、利落斜体、毛笔、行书、手写、稳重黑体六套）。
-- **粗剪 + 精剪**：转写和短窗复听，删掉口误、卡顿、重说；还会删掉前后矛盾、意思重复的句子，开头太平时把最有冲击的一句前置当钩子；按实测语速自动调速（音调不变），以语句流畅为准。
-- **讲解动画（B-roll）**：用代码生成（Remotion），米白纸面风格。讲解时人物缩进右上角圆环，总结和号召时人物全屏。每段换不同的转场和比喻动画。
-- **人物圆环**：每 0.1 秒跟踪人脸，平滑跟着人走；逆光时只给圆环补光，全屏仍是原片色彩。
-- **开头钩子**：第 0 帧就是完整封面，前 6 秒卡点做道具动画，配人物推近和冲击音效。
-- **音效**：每条视频重新程序化合成（无版权风险）。一类动作固定一种声音；不密不重复（全片约 50 处、任意 10 秒不超过 7 下、同一个声音不超过 3 次），电平压在人声之下。
-- **结尾评论卡**：口播没有号召时，结尾抛一个问题，箭头指向评论按钮。
-- **字幕**：居中单行，按词边界智能断句，关键词标红。人物全屏时字幕自动下移到锁骨位置，不挡脸。
-- **抖音安全区**：按手机端实测的界面遮挡区排版，并提供叠图检查。
-- **不加滤镜**：人物全屏时保持原片色彩，用 BT.709 全链路输出，最后自动比对颜色。
-- **自检后交付**：完整解码、黑帧、响度（-16 LUFS）、重新转写比对、全屏字幕与下巴距离、安全区叠图，最后生成剪辑说明。
+这套东西是在真实的房产账号上一条条磨出来的：每次看完成片提的意见（哪里挡脸了、音效太机械、还有结巴、配乐太吵……）都写回了 Skill，所以里面的规矩都是踩过坑之后留下的。内容以房产为例，但做法对别的行业的口播和实拍 Vlog 同样适用。
 
-![抖音安全区示意](references/抖音安全区示意.png)
+| | 口播剪辑 | 探盘剪辑 |
+| --- | --- | --- |
+| 适合的素材 | 一个人对着镜头讲的竖版口播（可附文案和照片） | 边走边拍边说 + 多段实拍空镜（小区、楼栋、沙盘、样板间、周边） |
+| 成片的样子 | 讲解时人物缩进右上角圆环，旁边是代码生成的讲解动画；总结和号召时人物全屏 | 全程实拍画面，声音做主线，说到哪切到哪；只加轻量的字幕、标签和数字 |
+| 调用 | `/口播剪辑` 或说"剪口播""剪辑这个视频" | `/探盘剪辑` 或说"剪探盘""探房视频""看房视频" |
+| 说明书 | [口播剪辑/SKILL.md](口播剪辑/SKILL.md) | [探盘剪辑/SKILL.md](探盘剪辑/SKILL.md) |
+
+## 两个 Skill 共同的做法
+
+- **每条片子从它自己的文案和素材长出来。** Skill 里给的是做法、规矩和一套积木（标签、分屏、章节号、字幕、混音这些零件），不是一个要复刻的成片。结构怎么分、开头用哪句、用哪些包装，都先读文案、看素材再定；连着两条长得一样算偷懒。
+- **先对齐再动手。** 先出剪辑方案和开头几十秒的样片，感觉对了再剪整条；听不清的数字、对不上的资料先问，不猜。
+- **不留结巴和重说。** 删口误、卡顿、重说，剪完把拼好的人声单独再转写一遍复查。
+- **音效用真实录制的。** 程序合成的音效听着机械，不用。音效不密不重复：任意 10 秒不超过 7 下，同一个声音全片不超过 3 次，压在人声之下。
+- **默认不加背景音乐。** 成片只有人声、现场声和音效，同时给出分轨和"哪几段没人说话"的清单，配乐留给你自己在剪映里加。
+- **人物画面不加滤镜、文字不挡脸。** 全程 BT.709 原色输出；标题、标签、字幕都避开脸，字幕放在胸口位置。
+- **按抖音安全区排版。** 避开右侧按钮、底部文案区和顶栏，并有叠图检查。
+- **先出 1080，确认后再出 4K。** 4K 渲染很慢，先看 1080 把要改的改完。
+- **改完自检再交付。** 抽帧逐张看、量响度、查字幕，然后说明删了什么、加了哪些口播里没有的字、哪些没法替你检查（比如声音好不好听）。
+- **最后给发布用的东西。** 标题备选、作品描述和话题、封面设计说明和参考图。
+
+## 口播剪辑做了什么
+
+1. **看片定风格**：按场景、光线、话题调性写一张风格卡，用这条视频自己的画面出字体样张，挑字体和配色。
+2. **粗剪和精剪**：转写、删口误和重说，删掉前后矛盾或意思重复的句子；开头太平时把最有冲击的一句提到最前面当钩子；按实测语速调速，音调不变。
+3. **讲解动画**：用 Remotion 写代码生成，米白纸面风格。每段换不同的转场和比喻动画。
+4. **人物圆环**：每 0.1 秒跟踪人脸，圆环平滑跟着人走，框到肩膀；逆光时只给圆环补光。
+5. **字幕**：居中单行，按词断句，关键词标红。
+6. **结尾评论卡**：口播没有号召时，结尾抛一个问题，箭头指向评论按钮。
+
+## 探盘剪辑做了什么
+
+1. **盘素材**：每段视频抽帧看拍了什么，有人声的全部转写，读楼盘资料和文案。
+2. **出方案**：素材怎么用、成片怎么分段、哪里露脸哪里盖空镜、缺什么素材，列出来先确认。
+3. **实拍为主**：人只在观点句和情绪句上露脸，其余时间用实拍盖住；连续只有人脸超过 10 秒会提醒。
+4. **轻包装**：字幕、楼盘名牌、关键数字、房间标签、章节号直接贴在实拍上。转场用拍摄里现成的动作或硬切。
+5. **真实感**：只用这一条的素材，不凭空画楼；样板间标注"装修效果"；没确认能公开的价格和房号不上画面。
+6. **时间线驱动**：画面、字幕、音效共用一份时间线，30 帧和 60 帧都能出，动画速度一致。
 
 ## 环境要求
 
 | 依赖 | 说明 |
 | --- | --- |
-| FFmpeg / ffprobe | 需加入 PATH；有 NVIDIA 显卡时自动用 h264_nvenc |
-| Python 3.10+ | `pip install -r requirements.txt`（Whisper 推荐模型 `large-v3-turbo`，首次运行会下载） |
-| Node.js 22+ | 动效工程用 Remotion 4，在 `motion-template/` 里执行 `npm ci` |
-| 磁盘 | node_modules 约 800 MB；一条 3 分钟 4K 成片的中间文件约 3 GB |
+| FFmpeg / ffprobe | 加入 PATH；有 NVIDIA 显卡时自动用 h264_nvenc |
+| Python 3.10+ | `pip install -r requirements.txt`（Whisper 用 `large-v3-turbo`，首次运行会下载模型） |
+| Node.js 22+ | 动效工程用 Remotion 4，在 `motion-template/` 里 `npm ci` |
+| 磁盘 | node_modules 约 800 MB；一条 3 分钟的片子，中间文件能到十几个 GB（定稿后可用 `clean_project.py` 清理） |
 
-目前在 Windows 上实际跑通，macOS 和 Linux 理论上可用（脚本不依赖系统字体）。
+目前在 Windows 上实际跑通，macOS 和 Linux 理论上可用。
 
 ## 安装
 
-把整个仓库放到对应目录，文件夹名就是 skill 名：
+Skill 的文件夹名就是调用时用的名字，所以把仓库克隆下来后，把两个文件夹放进助手的 skills 目录：
 
 ```bash
-# Claude Code
-git clone https://github.com/limn123/koubo-video-edit ~/.claude/skills/koubo-video-edit
-
-# Codex
-git clone https://github.com/limn123/koubo-video-edit ~/.codex/skills/koubo-video-edit
+git clone https://github.com/limn123/video-edit-skills
 ```
 
-然后安装依赖：
+```bash
+cp -r video-edit-skills/口播剪辑 video-edit-skills/探盘剪辑 ~/.claude/skills/
+```
+
+Codex 用户把目标换成 `~/.codex/skills/`。然后装依赖、下载字体和音效：
 
 ```bash
-cd ~/.claude/skills/koubo-video-edit        # 或 ~/.codex/skills/koubo-video-edit
-pip install -r requirements.txt
-python scripts/fetch_fonts.py --fetch       # 预先下载字幕字体（也可以不跑，首次用到时自动下载）
+pip install -r video-edit-skills/requirements.txt
+```
+
+```bash
+python ~/.claude/skills/口播剪辑/scripts/fetch_fonts.py --fetch
+```
+
+```bash
+python ~/.claude/skills/口播剪辑/scripts/fetch_sfx.py ~/.claude/skills/口播剪辑/assets/sfx_real
+```
+
+```bash
+python ~/.claude/skills/探盘剪辑/scripts/fetch_sfx.py ~/.claude/skills/探盘剪辑/motion-template/public/sfx_real
 ```
 
 ## 使用
 
-把口播视频（可以附上文案 `口播文案.txt` 和照片素材文件夹 `素材/`）放进一个文件夹，然后对助手说：
+**剪口播**：把口播视频（可附 `口播文案.txt` 和照片文件夹 `素材/`）放进一个文件夹，对助手说：
 
-> 帮我剪辑这个视频：D:\videos\1105\口播视频.mov
+> 帮我剪口播：D:\videos\1105\口播视频.mov
 
-或者直接调用 `/koubo-video-edit`。助手会按 `SKILL.md` 的流程走完全程。口播里听不清的数字会先问你，最后在视频所在目录的 `剪辑成果/` 下交付：
+**剪探盘**：把边走边说的视频、空镜、照片、楼盘资料放进一个文件夹，对助手说：
 
-```
-剪辑成果/
-├── <名称>_成片.mp4          # 2160×3840 · 30fps · H.264/AAC · 已烧录字幕
-├── <名称>_字幕.srt / .ass
-├── 剪辑说明.md              # 删了什么、调速多少、分镜、音效对照、数据来源、自检结果
-└── 工作素材/                # 转写、粗剪、分镜、联系表等中间文件
-```
+> 帮我剪探盘，素材在 D:\videos\1111
+
+也可以直接输入 `/口播剪辑` 或 `/探盘剪辑`。成果放在素材所在目录的 `剪辑成果/` 下：成片、字幕文件、人声和音效分轨、剪辑说明，以及中间文件 `工作素材/`。
 
 ## 目录结构
 
 ```
-SKILL.md                 # 给 AI 的完整流程和默认规矩（核心）
-agents/openai.yaml       # Codex 显示名
-scripts/                 # 转写、粗剪调速、字幕、混音、合成、各项自检脚本
-references/              # 粗剪规则、动画与版式、音效规范、字幕规范、验收清单、剪辑说明模板
-motion-template/         # Remotion 动效工程模板（一条完整的示例工程，可直接编译）
-assets/fonts/            # 字体（OFL 1.1），fun/ 下是按风格选用的标题字体
+口播剪辑/
+  SKILL.md             给 AI 的完整流程和规矩（核心）
+  scripts/             转写、粗剪调速、字幕、混音、合成、各项自检
+  references/          粗剪规则、动画与版式、音效规范、字幕规范、发布文案与封面、验收清单
+  motion-template/     Remotion 动效工程（一条示例，能直接编译；只供参考积木怎么拼）
+  assets/fonts/        字体（OFL 1.1）；assets/sfx_real/ 是真实音效清单
+探盘剪辑/
+  SKILL.md             给 AI 的完整流程和规矩（核心）
+  scripts/             素材代理、转写、能量表、结巴复查、安全区检查、清理
+  references/          时间线格式和现有积木、发布文案与封面、配乐（用户要求时）
+  motion-template/     白纸工程：时间线工具 tl_lib.py、积木库 Vlog.tsx、混音 audio_mix.py
 ```
 
 ## 改成你自己的风格
 
-默认规矩写在 `SKILL.md` 开头，常见的改法：
-- **背景和配色**：改 `motion-template/src/bg.tsx` 和 `src/engine/theme.ts`。
-- **人物圆环的位置**：改 `theme.ts` 的 `PIP_CORNER`（右上或左上）。
-- **安全区**：改 `theme.ts` 的 `SAFE` 和 `scripts/safearea_check.py`。
-- **字幕位置**：改 `scripts/restyle_subs.py` 的 `--broll-y` / `--full-y`。
-- **专有名词词库**：在 `references/` 加一份地名和品牌名清单，转写时用 `--terms` 带上。
+规矩都写在两个 `SKILL.md` 里，用大白话写的，直接改就行。常见的改法：
+
+- **你自己的偏好**：看完成片有意见，就让助手"把这条写进 skill"，下一条就不会再犯。这套 Skill 就是这样长出来的。
+- **配色和字体**：每条片子按内容定；想固定一套，就写进 `SKILL.md` 的风格部分。
+- **音效**：在 `sfx_map.json` 里增删，新音效从 [mixkit.co](https://mixkit.co/free-sound-effects/) 挑。
+- **安全区**：别的平台按钮位置不同，改 `scripts/safearea_check.py` 里的坐标。
+- **口播的背景和圆环位置**：改 `口播剪辑/motion-template/src/bg.tsx` 和 `src/engine/theme.ts`。
 
 ## 致谢与许可
 
 - 本项目以 MIT 许可发布，见 [LICENSE](LICENSE)。
-- 部分脚本和规范改编自 LeaderAI「Lead-自媒体口播剪辑」（leaderai-media-toolkit 1.7.0，MIT），原许可见 [LICENSE.leaderai](LICENSE.leaderai)。
-- 字体：IBM Plex Sans SC、得意黑 Smiley Sans、Noto Sans SC、Inter Tight、站酷快乐体、马善政毛笔、志莽行书、龙藏体，均为 SIL OFL 1.1，见 [assets/fonts/](assets/fonts/README.md)。
-- 动效基于 [Remotion](https://www.remotion.dev/)，转写基于 [OpenAI Whisper](https://github.com/openai/whisper)。注意 Remotion 对公司商用有单独的许可要求，请按其官网条款使用。
+- 口播剪辑的部分脚本和规范改编自 LeaderAI「Lead-自媒体口播剪辑」（leaderai-media-toolkit 1.7.0，MIT），原许可见 [口播剪辑/LICENSE.leaderai](口播剪辑/LICENSE.leaderai)。
+- 字体：IBM Plex Sans SC、得意黑 Smiley Sans、Noto Sans SC、Inter Tight、站酷快乐体、马善政毛笔、志莽行书、龙藏体，均为 SIL OFL 1.1，见 [口播剪辑/assets/fonts/](口播剪辑/assets/fonts/README.md)。
+- 音效来自 [Mixkit](https://mixkit.co/)。按 Mixkit 的免费音效许可，音效可以免费用在自己的视频里，但不能把音效文件本身再分发，所以仓库里只有清单（`sfx_map.json`），由 `fetch_sfx.py` 在你的电脑上下载。
+- 动效基于 [Remotion](https://www.remotion.dev/)，转写基于 [OpenAI Whisper](https://github.com/openai/whisper)。Remotion 对公司商用有单独的许可要求，请按其官网条款使用。

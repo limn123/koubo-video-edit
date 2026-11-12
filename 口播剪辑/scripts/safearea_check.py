@@ -4,7 +4,7 @@
   - 绿框 = 宽松安全区 x 33–975、y 112–1600，主信息放在框里；卡片边、印章角伸进红区一点点没关系；
   - 不能盖住的是：右侧按钮图标本身（白圈）、底部作者名 / 文案条（白框）里的文字，以及顶栏。
 
-遮挡区（1080×1920 设计坐标，按 references/抖音安全区示意.png 实测）：
+遮挡区（1080×1920 设计坐标，按 references/抖音安全区参考.png 实测）：
   顶栏 y<112；右侧按钮列 x≥935 且 y 815–1785（头像/点赞/评论/收藏/分享/唱片）；底部信息区 y≥1480（作者名/文案/导航）；左边距 x<33
 严格安全区 = x 33–935，y 112–1480（只作参考）；宽松安全区 = x 33–975，y 112–1600（按这个排）。
 
@@ -63,7 +63,7 @@ def main():
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(a.start), "-to", str(a.end), "-i", a.video,
                     "-vf", f"fps=1/{a.step},scale={TW}:{th}", os.path.join(tmp, "f_%05d.png")], check=True)
     fs = sorted(os.listdir(tmp))
-    font = ImageFont.truetype(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets", "fonts", "NotoSansSC-Medium.otf"), 18)
+    font = ImageFont.truetype("C:/Windows/Fonts/msyh.ttc", 18)
     per = a.cols * a.rows
     outs = []
     for k in range(0, len(fs), per):

@@ -1,0 +1,234 @@
+{
+ "hit": {
+  "file": "mk_772.mp3",
+  "max": 1.2,
+  "align": "peak",
+  "gain": -5,
+  "use": "开场/钩子重击",
+  "source": "https://assets.mixkit.co/active_storage/sfx/772/772-preview.mp3"
+ },
+ "tag_a": {
+  "file": "mk_2357.mp3",
+  "max": 0.4,
+  "align": "on",
+  "gain": -9,
+  "use": "名牌弹出 A",
+  "source": "https://assets.mixkit.co/active_storage/sfx/2357/2357-preview.mp3"
+ },
+ "tag_b": {
+  "file": "mk_2356.mp3",
+  "max": 0.4,
+  "align": "on",
+  "gain": -9,
+  "use": "名牌弹出 B",
+  "source": "https://assets.mixkit.co/active_storage/sfx/2356/2356-preview.mp3"
+ },
+ "stop": {
+  "file": "mk_2894.mp3",
+  "max": 1.0,
+  "align": "on",
+  "gain": -8,
+  "use": "停牌/提醒 boing",
+  "source": "https://assets.mixkit.co/active_storage/sfx/2894/2894-preview.mp3"
+ },
+ "down": {
+  "file": "mk_395.mp3",
+  "max": 1.3,
+  "align": "on",
+  "gain": -11,
+  "use": "下降/更低",
+  "source": "https://assets.mixkit.co/active_storage/sfx/395/395-preview.mp3"
+ },
+ "up": {
+  "file": "mk_2043.mp3",
+  "max": 0.9,
+  "align": "on",
+  "gain": -10,
+  "use": "上升/更高",
+  "source": "https://assets.mixkit.co/active_storage/sfx/2043/2043-preview.mp3"
+ },
+ "pop": {
+  "file": "mk_2358.mp3",
+  "max": 0.5,
+  "align": "on",
+  "gain": -9,
+  "use": "标签 pop",
+  "source": "https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3"
+ },
+ "tag_c": {
+  "file": "mk_2364.mp3",
+  "max": 0.6,
+  "align": "on",
+  "gain": -10,
+  "use": "硬 pop",
+  "source": "https://assets.mixkit.co/active_storage/sfx/2364/2364-preview.mp3"
+ },
+ "float_a": {
+  "file": "mk_2925.mp3",
+  "max": 0.6,
+  "align": "on",
+  "gain": -10,
+  "use": "飘字 泡泡",
+  "source": "https://assets.mixkit.co/active_storage/sfx/2925/2925-preview.mp3"
+ },
+ "float_b": {
+  "file": "mk_1124.mp3",
+  "max": 0.3,
+  "align": "on",
+  "gain": -9,
+  "use": "飘字 小咔哒",
+  "source": "https://assets.mixkit.co/active_storage/sfx/1124/1124-preview.mp3"
+ },
+ "float_c": {
+  "file": "mk_2354.mp3",
+  "max": 0.6,
+  "align": "on",
+  "gain": -10,
+  "use": "飘字 消息 pop",
+  "source": "https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3"
+ },
+ "dizzy": {
+  "file": "mk_746.mp3",
+  "max": 1.6,
+  "align": "on",
+  "gain": -11,
+  "use": "晕/纠结",
+  "source": "https://assets.mixkit.co/active_storage/sfx/746/746-preview.mp3"
+ },
+ "whoosh": {
+  "file": "mk_1490.mp3",
+  "max": 1.2,
+  "align": "peak",
+  "gain": -9,
+  "use": "换场 嗖 1",
+  "source": "https://assets.mixkit.co/active_storage/sfx/1490/1490-preview.mp3"
+ },
+ "whoosh2": {
+  "file": "mk_1492.mp3",
+  "max": 1.0,
+  "align": "peak",
+  "gain": -9,
+  "use": "换场 嗖 2",
+  "source": "https://assets.mixkit.co/active_storage/sfx/1492/1492-preview.mp3"
+ },
+ "whoosh3": {
+  "file": "mk_166.mp3",
+  "max": 0.8,
+  "align": "peak",
+  "gain": -9,
+  "use": "换场 短扫",
+  "source": "https://assets.mixkit.co/active_storage/sfx/166/166-preview.mp3"
+ },
+ "sheet": {
+  "file": "mk_1474.mp3",
+  "max": 1.6,
+  "align": "peak",
+  "gain": -10,
+  "use": "卡片/表格滑入",
+  "source": "https://assets.mixkit.co/active_storage/sfx/1474/1474-preview.mp3"
+ },
+ "ding1": {
+  "file": "mk_2870.mp3",
+  "max": 1.4,
+  "align": "on",
+  "gain": -10,
+  "use": "答对 叮",
+  "source": "https://assets.mixkit.co/active_storage/sfx/2870/2870-preview.mp3"
+ },
+ "ding3": {
+  "file": "mk_600.mp3",
+  "max": 1.6,
+  "align": "on",
+  "gain": -11,
+  "use": "成就铃",
+  "source": "https://assets.mixkit.co/active_storage/sfx/600/600-preview.mp3"
+ },
+ "ch1": {
+  "file": "mk_2867.mp3",
+  "max": 1.2,
+  "align": "on",
+  "gain": -9,
+  "use": "章节 1 确认音",
+  "source": "https://assets.mixkit.co/active_storage/sfx/2867/2867-preview.mp3"
+ },
+ "ch2": {
+  "file": "mk_951.mp3",
+  "max": 1.5,
+  "align": "on",
+  "gain": -10,
+  "use": "章节 2 提示音",
+  "source": "https://assets.mixkit.co/active_storage/sfx/951/951-preview.mp3"
+ },
+ "ch3": {
+  "file": "mk_2344.mp3",
+  "max": 1.5,
+  "align": "on",
+  "gain": -11,
+  "use": "章节 3 魔法铃",
+  "source": "https://assets.mixkit.co/active_storage/sfx/2344/2344-preview.mp3"
+ },
+ "zoom_in": {
+  "file": "mk_2608.mp3",
+  "max": 1.2,
+  "align": "on",
+  "gain": -10,
+  "use": "推近 吸入",
+  "source": "https://assets.mixkit.co/active_storage/sfx/2608/2608-preview.mp3"
+ },
+ "slam1": {
+  "file": "mk_2908.mp3",
+  "max": 2.2,
+  "align": "peak",
+  "gain": -5,
+  "use": "大字冲击 1",
+  "source": "https://assets.mixkit.co/active_storage/sfx/2908/2908-preview.mp3"
+ },
+ "slam2": {
+  "file": "mk_1143.mp3",
+  "max": 2.5,
+  "align": "peak",
+  "gain": -6,
+  "use": "大字冲击 2",
+  "source": "https://assets.mixkit.co/active_storage/sfx/1143/1143-preview.mp3"
+ },
+ "stat_a": {
+  "file": "mk_1999.mp3",
+  "max": 1.2,
+  "align": "on",
+  "gain": -11,
+  "use": "数字/金币",
+  "source": "https://assets.mixkit.co/active_storage/sfx/1999/1999-preview.mp3"
+ },
+ "tick_a": {
+  "file": "mk_1117.mp3",
+  "max": 0.3,
+  "align": "on",
+  "gain": -9,
+  "use": "打勾 click",
+  "source": "https://assets.mixkit.co/active_storage/sfx/1117/1117-preview.mp3"
+ },
+ "tick_b": {
+  "file": "mk_2069.mp3",
+  "max": 1.0,
+  "align": "on",
+  "gain": -11,
+  "use": "清单收尾",
+  "source": "https://assets.mixkit.co/active_storage/sfx/2069/2069-preview.mp3"
+ },
+ "swing": {
+  "file": "mk_1993.mp3",
+  "max": 1.0,
+  "align": "on",
+  "gain": -11,
+  "use": "价签/硬币",
+  "source": "https://assets.mixkit.co/active_storage/sfx/1993/1993-preview.mp3"
+ },
+ "note": {
+  "file": "mk_933.mp3",
+  "max": 1.5,
+  "align": "on",
+  "gain": -12,
+  "use": "提示小字 铃",
+  "source": "https://assets.mixkit.co/active_storage/sfx/933/933-preview.mp3"
+ }
+}
